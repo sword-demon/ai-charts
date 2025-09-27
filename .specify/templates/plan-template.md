@@ -47,7 +47,30 @@
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Next.js Architecture Check**:
+- [ ] All backend functionality implemented via Next.js API Routes in `app/api/`
+- [ ] No direct database access from client components
+- [ ] Proper separation between server and client code
+
+**Tailwind CSS + shadcn/ui Check**:
+- [ ] All frontend components use Tailwind CSS for styling
+- [ ] UI components built with shadcn/ui library
+- [ ] Custom styling follows Tailwind utility-first approach
+
+**ECharts Visualization Check**:
+- [ ] All chart components use ECharts library
+- [ ] Chart configurations are modular and reusable
+- [ ] Charts support responsive design
+
+**TypeScript-First Check**:
+- [ ] All code written in TypeScript with strict checking
+- [ ] API routes define clear input/output interfaces
+- [ ] Build fails on TypeScript errors
+
+**Component Architecture Check**:
+- [ ] Frontend follows React component composition patterns
+- [ ] Components organized by feature modules
+- [ ] State management uses React patterns
 
 ## Project Structure
 
@@ -82,20 +105,31 @@ tests/
 ├── integration/
 └── unit/
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+# [REMOVE IF UNUSED] Option 2: Next.js Web application (DEFAULT for this project)
+app/
+├── api/                 # Next.js API Routes
+│   ├── charts/
+│   ├── data/
+│   └── users/
+├── components/          # React components
+│   ├── ui/             # shadcn/ui components
+│   ├── charts/         # ECharts components
+│   └── layout/
+├── page.tsx            # Pages using app router
+└── globals.css         # Tailwind CSS
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+components/              # Shared components
+├── ui/                 # shadcn/ui library
+└── charts/             # ECharts wrappers
+
+lib/                    # Utilities and configs
+├── utils.ts
+└── types.ts
+
+tests/
+├── api/               # API route tests
+├── components/        # Component tests
+└── integration/       # E2E tests
 
 # [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
 api/
@@ -216,4 +250,4 @@ directories captured above]
 - [ ] Complexity deviations documented
 
 ---
-*Based on Constitution v2.1.1 - See `/memory/constitution.md`*
+*Based on Constitution v1.0.0 - See `.specify/memory/constitution.md`*
