@@ -1,0 +1,258 @@
+openapi: 3.0.3
+info:
+  title: AI Charts API
+  description: API for generating charts from natural language prompts using AI
+  version: 1.0.0
+  contact:
+    name: AI Charts Team
+    email: support@aicharts.com
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://aicharts.vercel.app/api
+    description: Production server
+
+paths:
+  /chat:
+    post:
+      summary: Process natural language prompt and generate chart
+      description: |
+        Accepts a natural language prompt describing data and chart requirements.
+        Returns a chart configuration object that can be used with ECharts.
+      operationId: generateChart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              simple_data:
+                summary: Simple data comparison
+                value:
+                  prompt: "Compare Beijing sales 120,130,150 vs Shanghai sales 100,140,160"
+                  conversationId: null
+              with_chart_type:
+                summary: Specified chart type
+                value:
+                  prompt: "Show bar chart for Q1 sales: Jan 100, Feb 150, Mar 200"
+                  conversationId: null
+              follow_up:
+                summary: Follow-up modification
+                value:
+                  prompt: "Change to pie chart"
+                  conversationId: "conv_123"
+      responses:
+        '200':
+          description: Chart configuration generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+              examples:
+                bar_chart:
+                  summary: Bar chart configuration
+                  value:
+                    success: true
+                    chartConfig:
+                      title:
+                        text: "Beijing vs Shanghai Sales"
+                      xAxis:
+                        data: ["Month 1", "Month 2", "Month 3"]
+                      yAxis: {}
+                      series:
+                        - name: "Beijing"
+                          type: "bar"
+                          data: [120, 130, 150]
+                        - name: "Shanghai"
+                          type: "bar"
+                          data: [100, 140, 160]
+                    conversationId: "conv_123"
+                    message: "Generated bar chart comparing Beijing and Shanghai sales"
+        '400':
+          description: Invalid request or no data found in prompt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                no_data:
+                  summary: No data in prompt
+                  value:
+                    success: false
+                    error: "NO_DATA_FOUND"
+                    message: "No numerical data found in your prompt. Please include data points to generate a chart."
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API service
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: "1.0.0"
+
+components:
+  schemas:
+    ChatRequest:
+      type: object
+      required:
+        - prompt
+      properties:
+        prompt:
+          type: string
+          description: Natural language description of data and chart requirements
+          example: "Compare Q1 sales: Jan 100, Feb 150, Mar 200"
+          minLength: 1
+          maxLength: 10000
+        conversationId:
+          type: string
+          description: Optional conversation ID for context-aware responses
+          example: "conv_123"
+          nullable: true
+        language:
+          type: string
+          description: Optional language code for localization
+          example: "en"
+          default: "en"
+
+    ChatResponse:
+      type: object
+      required:
+        - success
+        - chartConfig
+        - conversationId
+      properties:
+        success:
+          type: boolean
+          description: Whether the chart generation was successful
+          example: true
+        chartConfig:
+          $ref: '#/components/schemas/ChartConfig'
+        conversationId:
+          type: string
+          description: Conversation ID for maintaining context
+          example: "conv_123"
+        message:
+          type: string
+          description: Human-readable description of the generated chart
+          example: "Generated bar chart comparing quarterly sales data"
+
+    ChartConfig:
+      type: object
+      description: ECharts-compatible configuration object
+      required:
+        - title
+        - series
+      properties:
+        title:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Sales Comparison"
+        xAxis:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: string
+              example: ["Jan", "Feb", "Mar"]
+        yAxis:
+          type: object
+          example: {}
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeriesConfig'
+        tooltip:
+          type: object
+          description: Tooltip configuration
+        legend:
+          type: object
+          description: Legend configuration
+
+    SeriesConfig:
+      type: object
+      required:
+        - name
+        - type
+        - data
+      properties:
+        name:
+          type: string
+          description: Series name displayed in legend
+          example: "Sales"
+        type:
+          type: string
+          enum: [bar, line, pie, scatter, area, radar, gauge, funnel, treemap, heatmap]
+          example: "bar"
+        data:
+          oneOf:
+            - type: array
+              items:
+                type: number
+              example: [100, 150, 200]
+            - type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: number
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+        - message
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          enum: [NO_DATA_FOUND, INVALID_FORMAT, AI_ERROR, RATE_LIMIT, VALIDATION_ERROR]
+          example: "NO_DATA_FOUND"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "No numerical data found in your prompt. Please include data points to generate a chart."
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Optional API key for rate limiting (future use)
+
+security:
+  - ApiKeyAuth: []
