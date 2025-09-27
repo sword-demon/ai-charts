@@ -41,23 +41,23 @@
 - Paths follow Next.js 13+ app router structure
 
 ## Phase 3.1: Setup
-- [ ] T001 Initialize Next.js 15.5 project with TypeScript and required dependencies
-- [ ] T002 [P] Configure Tailwind CSS and PostCSS in `tailwind.config.js` and `postcss.config.js`
-- [ ] T003 [P] Setup ESLint and TypeScript strict configuration in `tsconfig.json`
-- [ ] T004 [P] Install and configure shadcn/ui components library with initial setup
-- [ ] T005 [P] Install ECharts and echarts-for-react with TypeScript definitions
-- [ ] T006 [P] Install and configure OpenAI SDK for Alibaba Cloud Bailian integration
-- [ ] T007 Create project directory structure as defined in plan.md
+- [x] T001 Initialize Next.js 15.5 project with TypeScript and required dependencies
+- [x] T002 [P] Configure Tailwind CSS and PostCSS in `tailwind.config.ts` and `postcss.config.mjs`
+- [x] T003 [P] Setup ESLint and TypeScript strict configuration in `tsconfig.json`
+- [x] T004 [P] Install and configure shadcn/ui components library with initial setup
+- [x] T005 [P] Install ECharts and echarts-for-react with TypeScript definitions
+- [x] T006 [P] Install and configure OpenAI SDK for Alibaba Cloud Bailian integration
+- [x] T007 Create project directory structure as defined in plan.md
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T008 [P] API contract test for POST /api/chat in `tests/api/chat.test.ts`
-- [ ] T009 [P] API contract test for GET /api/health in `tests/api/health.test.ts`
-- [ ] T010 [P] Integration test for basic chart generation scenario in `tests/e2e/chart-generation.spec.ts`
-- [ ] T011 [P] Integration test for error handling scenario in `tests/e2e/error-handling.spec.ts`
-- [ ] T012 [P] Integration test for conversation context scenario in `tests/e2e/conversation.spec.ts`
-- [ ] T013 [P] Component test for ChartRenderer in `tests/components/chart-renderer.test.tsx`
-- [ ] T014 [P] Component test for layout transformation in `tests/components/layout.test.tsx`
+- [x] T008 [P] API contract test for POST /api/chat in `tests/api/chat.test.ts`
+- [x] T009 [P] API contract test for GET /api/health in `tests/api/health.test.ts`
+- [x] T010 [P] Integration test for basic chart generation scenario in `tests/e2e/chart-generation.spec.ts`
+- [x] T011 [P] Integration test for error handling scenario in `tests/e2e/error-handling.spec.ts`
+- [x] T012 [P] Integration test for conversation context scenario in `tests/e2e/conversation.spec.ts`
+- [x] T013 [P] Component test for ChartRenderer in `tests/components/chart-renderer.test.tsx`
+- [x] T014 [P] Component test for layout transformation in `tests/components/layout.test.tsx`
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 - [ ] T015 [P] Create TypeScript types and interfaces in `lib/types.ts`
